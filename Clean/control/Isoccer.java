@@ -10,6 +10,7 @@ class Isoccer {
     private static Isoccer instance;
 
     private Login admin;
+	private GeradorSociotorcedor geradorSociotorcedor;
 	private CriadorFuncionario criadorFuncionario;
     private ArrayList<Funcionario> listaFuncionarios;
     private ArrayList<Sociotorcedor> listaSociostorcedores;
@@ -22,6 +23,7 @@ class Isoccer {
 
     private Isoccer() {
         this.admin = Login.getInstance();
+		this.geradorSociotorcedor = new GeradorSociotorcedor();
 		this.criadorFUncionario = new CriadorFuncionario();
         this.listaFuncionarios = new ArrayList<>();
         this.listaSociostorcedores = new ArrayList<>();
@@ -265,42 +267,24 @@ class Isoccer {
 
     private void adicionarSociotorcedor() {
 
-        String nome;
-        String email;
-        String cpf;
-        String telefone;
-        String endereco;
-        int tipo = 0;
+		int tipo = 0;
+		boolean entradaValida = false;
 
-        boolean entradaValida = false;
-
-        Console.solicitarNome();
-        nome = Input.lerString();
-
-        Console.solicitarEmail();
-        email = Input.lerString();
-
-        Console.solicitarCpf();
-        cpf = Input.lerString();
-
-        Console.solicitarTelefone();
-        telefone = Input.lerString();
-
-        Console.solicitarEndereco();
-        endereco = Input.lerString();
-
-        do {
-            Console.solicitarTipoSocio();
-            try {
-                tipo = Input.validarOpcao(1,3);
-                entradaValida = true;
-            } catch(NumberFormatException exception) {
-                Erro.entradaInvalida();
-            }
-        }while(!entradaValida);
-
-        this.listaSociostorcedores.add(new Sociotorcedor(nome,email,cpf,telefone,endereco,tipo));
-        Console.sociotorcedorAdicionado();
+		do {
+		    Console.solicitarTipoSocio();
+		    try {
+		        tipo = Input.validarOpcao(1,3);
+		        entradaValida = true;
+		    } catch(NumberFormatException exception) {
+		        Erro.entradaInvalida();
+		    }
+		}while(!entradaValida); 
+			
+		Sociotorcedor novoSocio = this.geradorSociotorcedor(tipo);
+		if(novoSocio != null) {
+			this.listaSociostorcedores.add(novoSocio);
+		    Console.sociotorcedorAdicionado();
+		}
     }
 
     private void alterarValorContribuicao() {
